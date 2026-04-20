@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { createCompraSchema } from '../lib/validators';
-import { CompraService } from '../services';
-import { getAuthUser } from '../middlewares';
-import { successResponse, errorResponse } from '../lib/response';
+import { createCompraSchema } from '../../lib/validators';
+import { CompraService } from '../../services';
+import { getAuthUser } from '../../middlewares';
+import { successResponse, errorResponse } from '../../lib/response';
 
 const compraService = new CompraService();
 

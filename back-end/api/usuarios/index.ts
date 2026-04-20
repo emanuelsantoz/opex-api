@@ -1,5 +1,5 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { prisma } from '../lib/prisma'; // Ajuste o caminho se necessário
+import { prisma } from '../../lib/prisma'; // Ajuste o caminho se necessário
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {

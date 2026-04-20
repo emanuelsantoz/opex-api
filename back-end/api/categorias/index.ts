@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { CategoriaService, ProdutoService } from '../services';
-import { getAuthUser } from '../middlewares';
-import { successResponse, errorResponse } from '../lib/response';
+import { CategoriaService, ProdutoService } from '../../services';
+import { getAuthUser } from '../../middlewares';
+import { successResponse, errorResponse } from '../../lib/response';
 
 const categoriaService = new CategoriaService();
 const produtoService = new ProdutoService();
