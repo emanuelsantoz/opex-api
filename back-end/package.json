@@ -7,7 +7,7 @@
   
 "scripts": {
   "dev": "prisma generate", 
-  "build": "prisma generate && tsc --noEmit",
+  "build": "prisma generate && tsc --noEmit && mkdir public",
   "db:pull": "prisma db pull",
   "db:generate": "prisma generate"
 },
