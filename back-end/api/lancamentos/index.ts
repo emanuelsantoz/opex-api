@@ -1,8 +1,8 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { createLancamentoSchema, listLancamentosSchema } from '../../lib/validators';
-import { LancamentoService } from '../../services/LancamentoService';
-import { getAuthUser } from '../../middlewares/auth';
-import { successResponse, errorResponse } from '../../lib/response';
+import { createLancamentoSchema, listLancamentosSchema } from '../../lib/validators.js';
+import { LancamentoService } from '../../services/LancamentoService.js';
+import { getAuthUser } from '../../middlewares/auth.js';
+import { successResponse, errorResponse } from '../../lib/response.js';
 
 const lancamentoService = new LancamentoService();
 

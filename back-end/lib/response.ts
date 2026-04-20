@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { ZodError } from 'zod';
-import { AppError } from './errors';
+import { AppError } from './errors.js';
 
 type ResponseSuccess<T> = {
   success: true;

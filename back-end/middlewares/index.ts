@@ -1,2 +1,2 @@
-export { getAuthUser } from './auth';
-export { hasPermission, requirePermission, requireHierarquia } from './rbac';
+export { getAuthUser } from './auth.js';
+export { hasPermission, requirePermission, requireHierarquia } from './rbac.js';

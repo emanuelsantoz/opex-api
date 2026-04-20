@@ -1,5 +1,5 @@
-import { AuthUser } from '../types';
-import { ForbiddenError } from '../lib/errors';
+import { AuthUser } from '../types/index.js';
+import { ForbiddenError } from '../lib/errors.js';
 
 // Crie um mapa de IDs para Nomes de Perfil (conforme seu banco Neon)
 const ID_PARA_PERFIL: Record<number, string> = {

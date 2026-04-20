@@ -1,6 +1,6 @@
-import { prisma } from '../lib/prisma';
-import { CreateCompraInput, AuthUser } from '../types';
-import { ForbiddenError, NotFoundError, ValidationError } from '../lib/errors';
+import { prisma } from '../lib/prisma.js';
+import { CreateCompraInput, AuthUser } from '../types/index.js';
+import { ForbiddenError, NotFoundError, ValidationError } from '../lib/errors.js';
 
 export class CompraService {
   async create(data: CreateCompraInput, user: AuthUser) {

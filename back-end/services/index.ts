@@ -1,4 +1,4 @@
-export { LancamentoService } from './LancamentoService';
-export { AprovacaoService } from './AprovacaoService';
-export { CompraService } from './CompraService';
-export { CategoriaService, ProdutoService } from './CategoriaService';
+export { LancamentoService } from './LancamentoService.js';
+export { AprovacaoService } from './AprovacaoService.js';
+export { CompraService } from './CompraService.js';
+export { CategoriaService, ProdutoService } from './CategoriaService.js';

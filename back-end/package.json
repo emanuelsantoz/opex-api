@@ -1,16 +1,15 @@
 {
-  "name": "controle-gastos-api",
+  "name": "opex-api",
   "version": "1.0.2",
   "description": "API Serverless para Planejamento Orçamentário Anual",
   "main": "api/routes/index.ts",
-  "type": "commonjs",
-  
-"scripts": {
-  "build": "prisma generate && tsc --noEmit && mkdir -p public && echo 'Opex API is running' > public/index.txt",
-  "dev": "vercel dev",
-  "db:pull": "prisma db pull",
-  "db:generate": "prisma generate"
-},
+  "type": "module",
+  "scripts": {
+    "build": "prisma generate && tsc --noEmit && mkdir -p public && echo 'Opex API is running' > public/index.txt",
+    "dev": "vercel dev",
+    "db:pull": "prisma db pull",
+    "db:generate": "prisma generate"
+  },
   "dependencies": {
     "@prisma/client": "^5.22.0",
     "cors": "^2.8.6",
@@ -28,6 +27,6 @@
     "vercel": "^37.0.0"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": "20.x"
   }
 }

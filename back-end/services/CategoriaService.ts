@@ -1,6 +1,6 @@
-import { prisma } from '../lib/prisma';
-import { AuthUser } from '../types';
-import { ForbiddenError, NotFoundError } from '../lib/errors';
+import { prisma } from '../lib/prisma.js';
+import { AuthUser } from '../types/index.js';  
+import { ForbiddenError, NotFoundError } from '../lib/errors.js';
 
 export class CategoriaService {
   async findAll(user: AuthUser) {

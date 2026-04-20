@@ -1,6 +1,6 @@
-import { prisma } from '../lib/prisma';
-import { CreateLancamentoInput, ListLancamentosQuery, AuthUser } from '../types';
-import { ForbiddenError, NotFoundError } from '../lib/errors';
+import { prisma } from '../lib/prisma.js';
+import { CreateLancamentoInput, ListLancamentosQuery, AuthUser } from '../types/index.js';
+import { ForbiddenError, NotFoundError } from '../lib/errors.js';
 import { Prisma } from '@prisma/client';
 
 export class LancamentoService {

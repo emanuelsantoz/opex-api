@@ -1,6 +1,6 @@
-import { prisma } from '../lib/prisma';
-import { AprovarLancamentoInput, AuthUser } from '../types';
-import { ForbiddenError, NotFoundError, ValidationError } from '../lib/errors';
+import { prisma } from '../lib/prisma.js';
+import { AprovarLancamentoInput, AuthUser } from '../types/index.js';
+import { ForbiddenError, NotFoundError, ValidationError } from '../lib/errors.js';
 
 // Máquina de estados válida
 const STATE_MACHINE: Record<string, string[]> = {

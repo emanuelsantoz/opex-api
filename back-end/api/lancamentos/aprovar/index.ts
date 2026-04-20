@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { approveLancamentoSchema } from '../../../lib/validators';
-import { AprovacaoService } from '../../../services';
-import { getAuthUser } from '../../../middlewares';
-import { successResponse, errorResponse } from '../../../lib/response';
+import { approveLancamentoSchema } from '../../../lib/validators.js';
+import { AprovacaoService } from '../../../services/index.js';
+import { getAuthUser } from '../../../middlewares/index.js';
+import { successResponse, errorResponse } from '../../../lib/response.js';
 
 const aprovacaoService = new AprovacaoService();
 

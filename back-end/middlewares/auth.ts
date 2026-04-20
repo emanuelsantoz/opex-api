@@ -1,5 +1,5 @@
-import { AuthUser } from '../types';
-import { UnauthorizedError } from '../lib/errors';
+import { AuthUser } from '../types/index.js';
+import { UnauthorizedError } from '../lib/errors.js';
 
 // Ajustamos para aceitar os headers de uma requisição qualquer
 export function getAuthUser(req: { headers: Record<string, string | string[] | undefined> }): AuthUser {
