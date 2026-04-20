@@ -1,0 +1,219 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// =============================================================================
+// ENUMS & TABELAS DE APOIO (STATUS E TIPOS)
+// =============================================================================
+
+model TipoPerfil {
+  id     Int      @id @default(autoincrement())
+  nome   String   @unique // ADMIN, COORDENADOR, OPERACAO
+  perfis Perfil[]
+}
+
+model StatusOrcamento {
+  id         Int         @id @default(autoincrement())
+  nome       String      @unique // RASCUNHO, AGUARDANDO_APROVACAO, APROVADO, REPROVADO
+  orcamentos Orcamento[]
+}
+
+model TipoLancamento {
+  id          Int          @id @default(autoincrement())
+  nome        String       @unique // FIXO, VARIAVEL
+  lancamentos Lancamento[]
+}
+
+model StatusLancamento {
+  id          Int          @id @default(autoincrement())
+  nome        String      @unique // RASCUNHO, PLANEJADO, PENDENTE_ADMINISTRADOR, APROVADO, VALIDADO_MENSAL, REPROVADO_ADMINISTRADOR, REPROVADO_COMPRAS, EM_EXECUCAO, CONCLUIDO
+  lancamentos Lancamento[]
+}
+
+model TipoProduto {
+  id       Int       @id @default(autoincrement())
+  nome     String    @unique
+  produtos Produto[]
+}
+
+// =============================================================================
+// USUÁRIOS E ESTRUTURA ORGANIZACIONAL
+// =============================================================================
+
+model Area {
+  id    Int     @id @default(autoincrement())
+  nome  String  @unique
+
+  usuarios     Usuario[]
+  orcamentos   Orcamento[]
+  areaProdutos AreaProduto[]
+  categorias   CategoriaLancamento[]
+}
+
+model Perfil {
+  id           Int     @id @default(autoincrement())
+  nome         String
+  idTipoPerfil Int
+  tipoPerfil   TipoPerfil @relation(fields: [idTipoPerfil], references: [id])
+  usuarios     Usuario[]
+}
+
+model Usuario {
+  id         Int     @id @default(autoincrement())
+  nome       String
+  senha      String
+  email      String  @unique
+  idPerfil   Int
+  idArea     Int
+  idSuperior Int?
+
+  perfil              Perfil                @relation(fields: [idPerfil], references: [id])
+  area                Area                  @relation(fields: [idArea], references: [id])
+  superior            Usuario?              @relation("Hierarquia", fields: [idSuperior], references: [id])
+  subordinados        Usuario[]             @relation("Hierarquia")
+
+  orcamentosCriados   Orcamento[]
+  validacoesMensais   ValidacaoMensal[]
+  historicoAprovacoes HistoricoLancamento[]
+  notificacoes        Notificacao[]
+}
+
+// =============================================================================
+// PRODUTOS E CATEGORIAS (ESTRUTURA FLEXÍVEL)
+// =============================================================================
+
+model AreaProduto {
+  id     Int    @id @default(autoincrement())
+  idArea Int
+  area   Area   @relation(fields: [idArea], references: [id])
+
+  produtos Produto[]
+}
+
+model CategoriaLancamento {
+  id            Int     @id @default(autoincrement())
+  nome          String
+  idArea        Int
+  area          Area    @relation(fields: [idArea], references: [id])
+
+  produtos      Produto[]
+}
+
+model Produto {
+  id                    Int              @id @default(autoincrement())
+  nome                  String
+  idTipoProduto         Int
+  idCategoriaLancamento Int
+  idAreaProduto         Int
+
+  tipoProduto           TipoProduto         @relation(fields: [idTipoProduto], references: [id])
+  categoria             CategoriaLancamento @relation(fields: [idCategoriaLancamento], references: [id])
+  areaProduto           AreaProduto         @relation(fields: [idAreaProduto], references: [id])
+  lancamentos           Lancamento[]
+}
+
+// =============================================================================
+// PLANEJAMENTO E EXECUÇÃO FINANCEIRA
+// =============================================================================
+
+model Orcamento {
+  id                Int       @id @default(autoincrement())
+  ano               Int
+  idArea            Int
+  idCoordenador     Int
+  idStatusOrcamento Int
+  valorTotalAnual   Decimal   @db.Decimal(15, 2) @default(0)
+
+  area              Area            @relation(fields: [idArea], references: [id])
+  coordenador       Usuario         @relation(fields: [idCoordenador], references: [id])
+  status            StatusOrcamento @relation(fields: [idStatusOrcamento], references: [id])
+
+  lancamentos       Lancamento[]
+  validacoesMensais ValidacaoMensal[]
+
+  @@unique([ano, idArea])
+}
+
+model Lancamento {
+  id                 Int            @id @default(autoincrement())
+  idOrcamento        Int
+  idProduto          Int
+  idTipoLancamento   Int
+  idStatusLancamento Int
+
+  mesReferencia      Int
+  valorPlanejado     Decimal        @db.Decimal(15, 2)
+  valorRealizado     Decimal        @db.Decimal(15, 2) @default(0)
+  quantidade         Decimal        @db.Decimal(15, 2)
+  descricao          String?        @db.Text
+
+  orcamento          Orcamento        @relation(fields: [idOrcamento], references: [id])
+  produto            Produto          @relation(fields: [idProduto], references: [id])
+  tipo               TipoLancamento   @relation(fields: [idTipoLancamento], references: [id])
+  status             StatusLancamento @relation(fields: [idStatusLancamento], references: [id])
+
+  compras            Compra[]
+  historicos         HistoricoLancamento[]
+
+  @@index([idOrcamento, mesReferencia])
+}
+
+model ValidacaoMensal {
+  id          String   @id @default(uuid())
+  idOrcamento Int
+  idUsuario   Int
+  mes         Int
+  validado    Boolean  @default(false)
+  dataCheck   DateTime? @default(now())
+
+  orcamento   Orcamento @relation(fields: [idOrcamento], references: [id])
+  usuario     Usuario   @relation(fields: [idUsuario], references: [id])
+
+  @@unique([idOrcamento, mes])
+}
+
+model Compra {
+  id             String   @id @default(uuid())
+  idLancamento   Int
+  dataCompra     DateTime @default(now())
+  valorPago      Decimal  @db.Decimal(15, 2)
+  idComprovantes Int?
+
+  lancamento   Lancamento    @relation(fields: [idLancamento], references: [id])
+  comprovantes Comprovantes? @relation(fields: [idComprovantes], references: [id])
+}
+
+model Comprovantes {
+  id      Int     @id @default(autoincrement())
+  url     String
+  imagem  Bytes?
+  compras Compra[]
+}
+
+model HistoricoLancamento {
+  id                 String   @id @default(uuid())
+  idLancamento       Int
+  idUsuarioAprovador Int
+  acao               String
+  dataAcao           DateTime @default(now())
+  observacao         String?  @db.Text
+
+  lancamento Lancamento @relation(fields: [idLancamento], references: [id])
+  aprovador  Usuario    @relation(fields: [idUsuarioAprovador], references: [id])
+}
+
+model Notificacao {
+  id        String   @id @default(uuid())
+  idUsuario Int
+  titulo    String
+  mensagem  String   @db.Text
+  lida      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  usuario   Usuario  @relation(fields: [idUsuario], references: [id])
+}
