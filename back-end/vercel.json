@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "type": "module",
   "rewrites": [
     { "source": "/(.*)", "destination": "/api/$1" }
   ],
