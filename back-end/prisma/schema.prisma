@@ -128,7 +128,8 @@ model Orcamento {
   idCoordenador     Int
   idStatusOrcamento Int
   valorTotalAnual   Decimal   @db.Decimal(15, 2) @default(0)
-
+  valorUtilizado    Decimal   @db.Decimal(15, 2) @default(0) // O "Realizado" (Soma dos lançamentos)
+  
   area              Area            @relation(fields: [idArea], references: [id])
   coordenador       Usuario         @relation(fields: [idCoordenador], references: [id])
   status            StatusOrcamento @relation(fields: [idStatusOrcamento], references: [id])

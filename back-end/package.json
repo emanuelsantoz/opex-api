@@ -4,6 +4,9 @@
   "description": "API Serverless para Planejamento Orçamentário Anual",
   "main": "api/routes/index.ts",
   "type": "module",
+  "prisma": {
+    "seed": "npx tsx prisma/seed.ts"
+  },
   "scripts": {
     "build": "prisma generate && tsc --noEmit && mkdir -p public && echo 'Opex API is running' > public/index.txt",
     "dev": "vercel dev",

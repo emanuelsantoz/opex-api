@@ -1,6 +1,7 @@
 import { prisma } from '../lib/prisma.js';
 import { AprovarLancamentoInput, AuthUser } from '../types/index.js';
 import { ForbiddenError, NotFoundError, ValidationError } from '../lib/errors.js';
+import { id } from 'zod/v4/locales';
 
 // Máquina de estados válida
 const STATE_MACHINE: Record<string, string[]> = {
@@ -58,18 +59,14 @@ export class AprovacaoService {
 
     // Executar aprovação em transação
     const [lancamentoAtualizado] = await prisma.$transaction([
+      // 1. Atualiza o Lançamento
       prisma.lancamento.update({
         where: { id: data.idLancamento },
-        data: {
-          idStatusLancamento: data.idStatusLancamento,
-        },
-        include: {
-          orcamento: true,
-          produto: true,
-          tipo: true,
-          status: true,
-        },
+        data: { idStatusLancamento: data.idStatusLancamento },
+        include: { orcamento: true, produto: true, tipo: true, status: true },
       }),
+
+      // 2. Cria o Histórico
       prisma.historicoLancamento.create({
         data: {
           idLancamento: data.idLancamento,

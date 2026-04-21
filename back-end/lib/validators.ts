@@ -10,6 +10,8 @@ export const createLancamentoSchema = z.object({
   quantidade: z.number().positive('Quantidade deve ser positiva'),
 });
 
+export const updateLancamentoSchema = createLancamentoSchema.partial();
+
 export const approveLancamentoSchema = z.object({
   idLancamento: z.number().int().positive(),
   idStatusLancamento: z.number().int().positive(),
