@@ -1,15 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { createOrcamentoSchema, listOrcamentosSchema } from '../../lib/validators';
-import { OrcamentoService } from '../../services';
-import { getAuthUser } from '../../middlewares';
-import { successResponse, errorResponse } from '../../lib/response';
+import { createOrcamentoSchema, listOrcamentosSchema } from '../../lib/validators.js';
+import { OrcamentoService } from '../../services/index.js';
+import { getAuthUser } from '../../middlewares/index.js';
+import { successResponse, errorResponse } from '../../lib/response.js';
 
 const orcamentoService = new OrcamentoService();
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     if (req.method === 'POST') {
-      const user = getAuthUser(req);
+      const user = getAuthUser(req.headers as any);
 
       const parseResult = createOrcamentoSchema.safeParse(req.body);
       if (!parseResult.success) {

@@ -35,3 +35,27 @@ export interface ListLancamentosQuery {
   page?: number;
   limit?: number;
 }
+
+export interface CreateOrcamentoInput {
+  ano: number;
+  idArea: number;
+  idCoordenador: number;
+  idStatusOrcamento: number;
+  valorTotalAnual: number;
+}
+
+export interface UpdateOrcamentoInput {
+  ano?: number;
+  idArea?: number;
+  idCoordenador?: number;
+  idStatusOrcamento?: number;
+  valorTotalAnual?: number;
+}
+
+export interface ListOrcamentosQuery {
+  ano?: number;
+  idArea?: number;
+  idStatusOrcamento?: number;
+  page?: number;
+  limit?: number;
+}

@@ -23,6 +23,7 @@ export const MOCK_PERFIS = [
 
 export const MOCK_STATUS_ORCAMENTO = [
   { nome: 'RASCUNHO' },
+  { nome: 'EM_ELABORACAO' },
   { nome: 'AGUARDANDO_APROVACAO' },
   { nome: 'APROVADO' },
   { nome: 'REPROVADO' }
