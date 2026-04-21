@@ -14,6 +14,7 @@ datasource db {
 model TipoPerfil {
   id     Int      @id @default(autoincrement())
   nome   String   @unique // ADMIN, COORDENADOR, OPERACAO
+  descricao String?
   perfis Perfil[]
 }
 
@@ -48,6 +49,8 @@ model TipoProduto {
 model Area {
   id    Int     @id @default(autoincrement())
   nome  String  @unique
+  sigla String @unique
+
 
   usuarios     Usuario[]
   orcamentos   Orcamento[]
@@ -57,7 +60,7 @@ model Area {
 
 model Perfil {
   id           Int     @id @default(autoincrement())
-  nome         String
+  nome         String  @unique
   idTipoPerfil Int
   tipoPerfil   TipoPerfil @relation(fields: [idTipoPerfil], references: [id])
   usuarios     Usuario[]
