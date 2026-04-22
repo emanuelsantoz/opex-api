@@ -138,7 +138,6 @@ export class AprovacaoService {
     });
   }
 
-
   async getHistory(idLancamento: number, user: AuthUser) {
     const lancamento = await prisma.lancamento.findUnique({
       where: { id: idLancamento },
