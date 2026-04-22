@@ -20,11 +20,11 @@ export class OrcamentoService {
     }
 
     const userPerfil = await prisma.perfil.findFirst({
-        where: {id: 1 }
+        where: {id: user.idPerfil }
     })
 
-    if(userPerfil?.nome !== "Diretor"){
-        
+    if(userPerfil?.nome !== "DIRETOR"){
+
     }
 
     // Verificar se a área existe
@@ -36,7 +36,7 @@ export class OrcamentoService {
       throw new NotFoundError('Área');
     }
 
-    // Verificar se o coordenador existe
+    // Verificar se o coordenador existe - O USUARIO QUE VAI ABRIR ISSO É O DONO DE TUDO(ATÉ O PRESENTE MOMENTO) 21-04-2026
     // const coordenador = await prisma.usuario.findUnique({
     //   where: { id: data.idCoordenador },
     // });

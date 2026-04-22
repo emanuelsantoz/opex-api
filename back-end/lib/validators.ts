@@ -10,6 +10,9 @@ export const createLancamentoSchema = z.object({
   quantidade: z.number().positive('Quantidade deve ser positiva'),
 });
 
+export const updateLancamentoSchema =  createLancamentoSchema.partial();
+
+
 export const approveLancamentoSchema = z.object({
   idLancamento: z.number().int().positive(),
   idStatusLancamento: z.number().int().positive(),
@@ -58,6 +61,7 @@ export const listOrcamentosSchema = z.object({
   page: z.coerce.number().int().positive().default(1),
   limit: z.coerce.number().int().positive().max(100).default(20),
 });
+
 
 export type CreateLancamentoDTO = z.infer<typeof createLancamentoSchema>;
 export type ApproveLancamentoDTO = z.infer<typeof approveLancamentoSchema>;

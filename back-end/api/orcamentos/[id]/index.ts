@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { idParamSchema, updateOrcamentoSchema } from '../../../lib/validators';
-import { OrcamentoService } from '../../../services';
-import { getAuthUser } from '../../../middlewares';
-import { successResponse, errorResponse } from '../../../lib/response';
+import { idParamSchema, updateOrcamentoSchema } from '../../../lib/validators.js';
+import { OrcamentoService } from '../../../services/index.js';
+import { getAuthUser } from '../../../middlewares/index.js';
+import { successResponse, errorResponse } from '../../../lib/response.js';
 
 const orcamentoService = new OrcamentoService();
 
