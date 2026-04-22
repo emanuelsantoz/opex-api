@@ -112,11 +112,11 @@ model Produto {
   nome                  String
   idTipoProduto         Int
   idCategoriaLancamento Int
-  idAreaProduto         Int
+  idAreaProduto         Int?
 
   tipoProduto           TipoProduto         @relation(fields: [idTipoProduto], references: [id])
   categoria             CategoriaLancamento @relation(fields: [idCategoriaLancamento], references: [id])
-  areaProduto           AreaProduto         @relation(fields: [idAreaProduto], references: [id])
+  areaProduto           AreaProduto?         @relation(fields: [idAreaProduto], references: [id])
   lancamentos           Lancamento[]
 }
 

@@ -12,7 +12,6 @@ export const createLancamentoSchema = z.object({
 
 export const updateLancamentoSchema =  createLancamentoSchema.partial();
 
-
 export const approveLancamentoSchema = z.object({
   idLancamento: z.number().int().positive(),
   idStatusLancamento: z.number().int().positive(),
