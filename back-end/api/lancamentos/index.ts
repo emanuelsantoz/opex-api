@@ -9,7 +9,7 @@ const lancamentoService = new LancamentoService();
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     if (req.method === 'POST') {
-      const user = getAuthUser(req.headers as any);
+      const user = getAuthUser(req);
 
       const parseResult = createLancamentoSchema.safeParse(req.body);
       if (!parseResult.success) {
@@ -21,7 +21,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     if (req.method === 'GET') {
-      const user = getAuthUser(req.headers as any);
+      const user = getAuthUser(req);
 
       const parseResult = listLancamentosSchema.safeParse(req.query);
       if (!parseResult.success) {
