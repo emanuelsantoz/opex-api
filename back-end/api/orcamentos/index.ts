@@ -15,8 +15,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (!parseResult.success) {
         return res.status(400).json(errorResponse(parseResult.error));
       }
-
+      
       const orcamento = await orcamentoService.create(parseResult.data, user);
+      console.log(orcamento)
       return res.status(201).json(successResponse(orcamento, 201));
     }
 

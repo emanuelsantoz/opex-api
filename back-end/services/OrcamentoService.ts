@@ -5,6 +5,7 @@ import { Prisma } from '@prisma/client';
 
 export class OrcamentoService {
   async create(data: CreateOrcamentoInput, user: AuthUser) {
+    console.log("Iniciando Orçcamento");
     // Verificar se já existe orçamento para esta área e ano
     const existingOrcamento = await prisma.orcamento.findUnique({
       where: {
@@ -14,46 +15,51 @@ export class OrcamentoService {
         },
       },
     });
-
+    console.log("Passou validação de orcamento para area");
+    
     if (existingOrcamento) {
       throw new ConflictError(`Já existe um orçamento para a área ${data.idArea} no ano ${data.ano}`);
     }
-
+    
     const userPerfil = await prisma.perfil.findFirst({
-        where: {id: user.idPerfil }
+      where: { id: user.idPerfil }
     })
-
-    if(userPerfil?.nome !== "DIRETOR"){
-
+    
+    if (userPerfil?.nome !== "DIRETOR") {
+      throw new ConflictError(`Já existe um orçamento para a área ${data.idArea} no ano ${data.ano}`);
     }
-
+    console.log("Passou validação de perfil diretor");
+    
     // Verificar se a área existe
     const area = await prisma.area.findUnique({
       where: { id: data.idArea },
     });
-
+    
     if (!area) {
       throw new NotFoundError('Área');
     }
-
+    console.log("Passou validação de area existente");
+    
     // Verificar se o coordenador existe - O USUARIO QUE VAI ABRIR ISSO É O DONO DE TUDO(ATÉ O PRESENTE MOMENTO) 21-04-2026
     // const coordenador = await prisma.usuario.findUnique({
-    //   where: { id: data.idCoordenador },
+      //   where: { id: data.idCoordenador },
     // });
 
     // if (!coordenador) {
     //   throw new NotFoundError('Coordenador');
     // }
-
+    
     // Verificar se o status existe
     const status = await prisma.statusOrcamento.findUnique({
       where: { id: data.idStatusOrcamento },
     });
-
+    console.log("Passou validação de status lancamento");
+    
     if (!status) {
       throw new NotFoundError('Status do orçamento');
     }
-
+    
+    console.log("Inicando criação do orcamento BD");
     const orcamento = await prisma.orcamento.create({
       data: {
         ano: data.ano,
@@ -70,10 +76,11 @@ export class OrcamentoService {
         status: true,
       },
     });
-
+    
+    console.log("Inserido com sucessso");
     return orcamento;
   }
-
+  
   async findAll(user: AuthUser, filters: ListOrcamentosQuery) {
     const { ano, idArea, idStatusOrcamento, page = 1, limit = 20 } = filters;
     const skip = (page - 1) * limit;
