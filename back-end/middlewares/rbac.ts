@@ -3,7 +3,7 @@ import { ForbiddenError } from '../lib/errors.js';
 
 // Crie um mapa de IDs para Nomes de Perfil (conforme seu banco Neon)
 const ID_PARA_PERFIL: Record<number, string> = {
-  1: 'ESTRATEGISTA',
+  1: 'DIRETOR',
   2: 'PLANEJADOR',
   3: 'OPERACAO'
 };
