@@ -21,7 +21,7 @@ export class OrcamentoService {
       throw new ConflictError(`Já existe um orçamento para a área ${data.idArea} no ano ${data.ano}`);
     }
 
-    const userPerfil = await prisma.perfil.findFirst({
+    const userPerfil = await prisma.tipoPerfil.findFirst({
       where: { id: user.idPerfil }
     })
 
