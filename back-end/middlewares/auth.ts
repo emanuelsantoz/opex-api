@@ -3,15 +3,23 @@ import { UnauthorizedError } from '../lib/errors.js';
 
 // Ajustamos para aceitar os headers de uma requisição qualquer
 export function getAuthUser(req: { headers: Record<string, string | string[] | undefined> }): AuthUser {
-  const { headers } = req; // Extraímos os headers do objeto recebido
-  
+  // 1. Verificação ultra-segura do objeto req e headers
+  const headers = req?.headers;
+
+  if (!headers) {
+    console.error("ERRO: Objeto req.headers não chegou na função getAuthUser");
+    throw new UnauthorizedError('Cabeçalhos de autenticação ausentes');
+  }
+
+  // 2. Extração segura
   const userId = headers['x-user-id'];
   const userArea = headers['x-user-area'];
   const userPerfil = headers['x-user-perfil'];
   const userSuperior = headers['x-user-superior'];
 
+  // 3. Validação de presença
   if (!userId || !userArea || !userPerfil) {
-    throw new UnauthorizedError('Cabeçalhos de autenticação não encontrados');
+    throw new UnauthorizedError('Cabeçalhos de autenticação incompletos');
   }
 
   const id = parseInt(Array.isArray(userId) ? userId[0] : userId, 10);

@@ -9,7 +9,7 @@ const orcamentoService = new OrcamentoService();
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     if (req.method === 'POST') {
-      const user = getAuthUser(req.headers as any);
+      const user = getAuthUser(req);
 
       const parseResult = createOrcamentoSchema.safeParse(req.body);
       if (!parseResult.success) {
