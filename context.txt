@@ -1,0 +1,72 @@
+### Resumo do Projeto: Controle de Gastos
+- Stack: React (Vite), TailwindCSS, Recharts (Gráficos), Lucide React (Ícones).
+- Arquitetura: Componentização baseada em Clean Code, separando UI (genéricos), Dashboards (lógica de negócio) e Layout (estrutura).
+- Acesso Baseado em Perfis:
+  - N3 (Executivo): Visão macro de todas as áreas, KPIs consolidados e evolução anual.
+  - N2 (Gerente de Área): Visão detalhada de uma área específica, orçamento anual vs. realizado.
+  - N1 (Operacional): Gestão de lançamentos, busca, filtros e cadastros (CRUD).
+### Estrutura de Pastas Sugerida
+```
+/src
+  /components
+    /dashboard
+      DashboardN1.jsx, DashboardN2.
+      jsx, DashboardN3.jsx, 
+      HistoricoConsolidado.jsx, 
+      PerfilUsuario.jsx
+    /layout
+      Sidebar.jsx
+    /ui
+      KPICard.jsx, Modal.jsx, 
+      StatusBadge.jsx
+  /data
+    mockData.js
+  /utils
+    constants.js, formatters.js
+  App.jsx, index.css, main.jsx
+package.json, tailwind.config.js, 
+vite.config.js
+```
+### Código Completo dos Arquivos 1. Configuração e Utilitários
+- constants.js : Cores e estilos globais.
+```
+export const CORES = {
+  primaria: '#00965E', 
+  primaria_escura: '#007A4D', 
+  primaria_clara: '#00B872',
+  secundaria: '#0066CC', alerta: 
+  '#F59E0B', perigo: '#EF4444', 
+  sucesso: '#10B981',
+  cinza: { 50: '#F9FAFB', 100: 
+  '#F3F4F6', 200: '#E5E7EB', 300: 
+  '#D1D5DB', 400: '#9CA3AF', 500: 
+  '#6B7280', 600: '#4B5563', 700: 
+  '#374151', 800: '#1F2937', 900: 
+  '#111827' }
+};
+```
+- formatters.js : Formatação de dados.
+```
+export const formatCurrency = 
+(value) => new Intl.NumberFormat
+('pt-BR', { style: 'currency', 
+currency: 'BRL' }).format(value);
+export const getMesNome = (mes) => 
+['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 
+'Jun', 'Jul', 'Ago', 'Set', 'Out', 
+'Nov', 'Dez'][mes - 1];
+```
+- mockData.js : Dados simulados (Usuários, Áreas, Lançamentos). (Nota: Este arquivo contém as arrays usuarios , areas , categorias , produtos , lancamentosIniciais e orcamentosHistoricos extraídos do TXT original). 2. Componentes de UI (Reutilizáveis)
+- KPICard.jsx : Cards de indicadores.
+- Modal.jsx : Componente de diálogo.
+- StatusBadge.jsx : Tags de status colorido. 3. Dashboards por Nível
+- DashboardN3.jsx : Visão de Gestor Executivo com PieChart e BarChart de todas as áreas.
+- DashboardN2.jsx : Visão de Gerente de Área com foco no orçamento anual vs. realizado e evolução mensal.
+- DashboardN1.jsx : Tabela operacional com filtros de busca, status e botões de ação (Edit/Delete). 4. Layout e App Principal
+- Sidebar.jsx : Navegação lateral com troca de contexto de usuário.
+- App.jsx : Gerenciamento de estado global (usuário ativo, lançamentos) e roteamento condicional dos Dashboards.
+### Instruções para a Nova IA
+1. Contexto: Informe à IA que o projeto é um sistema de controle de gastos baseado em referencia.txt (que deve estar na raiz).
+2. Ação: Peça para recriar a estrutura de pastas e arquivos conforme o mockData.js e componentes acima.
+3. Dependências: Garanta que ela instale recharts e lucide-react .
+Com este compilado, qualquer IA do Trae conseguirá reconstruir o projeto exatamente de onde paramos, mantendo a organização e as regras de negócio que implementamos. Boa sorte no desenvolvimento! continuidade do desenvolvimento!
