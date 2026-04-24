@@ -8,6 +8,13 @@ const lancamentoService = new LancamentoService();
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
+    if (req.method === 'OPTIONS') {
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+      res.setHeader('Access-Control-Allow-Headers', 'x-user-id, x-user-area, x-user-perfil, content-type');
+      return res.status(200).end(); // Aqui o guarda-costas (navegador) sorri e deixa o GET passar
+    }
+
     if (req.method === 'POST') {
       const user = getAuthUser(req);
 
@@ -21,7 +28,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     if (req.method === 'GET') {
-      res.setHeader('Access-Control-Allow-Origin', '*');
       const user = getAuthUser(req);
 
       const parseResult = listLancamentosSchema.safeParse(req.query);
