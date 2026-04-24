@@ -21,6 +21,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     if (req.method === 'GET') {
+      res.setHeader('Access-Control-Allow-Origin', '*');
       const user = getAuthUser(req);
 
       const parseResult = listLancamentosSchema.safeParse(req.query);
