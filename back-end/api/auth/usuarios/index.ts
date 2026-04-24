@@ -7,6 +7,9 @@ import { AuthUser } from '../../../types/index.js';
 const usuarioService = new UsuarioService();
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
+  // 1. Aplica o CORS (permitindo que o front acesse)
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  
   if (req.method === 'GET') {
     // Login via GET
     const validation = loginSchema.safeParse(req.query);
