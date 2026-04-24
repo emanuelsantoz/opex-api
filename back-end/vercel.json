@@ -10,8 +10,7 @@
     "iad1"
   ],
   "headers": [
-    {
-      "source": "/api/(.*)",
+    {"source": "/api/(.*)",
       "headers": [
         {
           "key": "Access-Control-Allow-Credentials",
@@ -19,15 +18,15 @@
         },
         {
           "key": "Access-Control-Allow-Origin",
-          "value": "http://localhost:5175"
+          "value": "*"
         },
         {
           "key": "Access-Control-Allow-Methods",
-          "value": "GET,DELETE,PATCH,POST,PUT,OPTIONS"
+          "value": "GET,OPTIONS,PATCH,DELETE,POST,PUT"
         },
         {
           "key": "Access-Control-Allow-Headers",
-          "value": "Content-Type, x-user-id, x-user-area, x-user-perfil, x-user-superior, Authorization"
+          "value": "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, x-user-id, x-user-area, x-user-perfil"
         }
       ]
     }
