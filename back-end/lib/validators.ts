@@ -26,7 +26,7 @@ export const createCompraSchema = z.object({
 });
 
 export const listLancamentosSchema = z.object({
-  ano: z.coerce.number().int().min(2020).max(2100).optional(),
+  ano: z.coerce.number().int().min(2001).max(2100).optional(),
   mes: z.coerce.number().int().min(1).max(12).optional(),
   idStatusLancamento: z.coerce.number().int().positive().optional(),
   page: z.coerce.number().int().positive().default(1),
@@ -45,8 +45,22 @@ export const createOrcamentoSchema = z.object({
   valorTotalAnual: z.number().min(0).default(0),
 });
 
+export const createUsuarioSchema = z.object({
+  nome: z.string().min(1, 'Nome é obrigatório').max(100),
+  email: z.string().email('Email inválido'),
+  senha: z.string().min(6, 'Senha deve ter no mínimo 6 caracteres'),
+  idPerfil: z.number().int().positive(),
+  idArea: z.number().int().positive(),
+  idSuperior: z.number().int().positive().nullable(),
+});
+
+export const loginSchema = z.object({
+  email: z.string().email('Email inválido'),
+  senha: z.string().min(1, 'Senha é obrigatória').max(100, 'Senha deve ter no máximo 100 caracteres'),
+});
+
 export const updateOrcamentoSchema = z.object({
-  ano: z.number().int().min(2020).max(2100).optional(),
+  ano: z.number().int().min(2001).max(2100).optional(),
   idArea: z.number().int().positive().optional(),
   idCoordenador: z.number().int().positive().optional(),
   idStatusOrcamento: z.number().int().positive().optional(),
@@ -54,7 +68,7 @@ export const updateOrcamentoSchema = z.object({
 });
 
 export const listOrcamentosSchema = z.object({
-  ano: z.coerce.number().int().min(2020).max(2100).optional(),
+  ano: z.coerce.number().int().min(2001).max(2100).optional(),
   idArea: z.coerce.number().int().positive().optional(),
   idStatusOrcamento: z.coerce.number().int().positive().optional(),
   page: z.coerce.number().int().positive().default(1),
@@ -69,3 +83,5 @@ export type ListLancamentosDTO = z.infer<typeof listLancamentosSchema>;
 export type CreateOrcamentoDTO = z.infer<typeof createOrcamentoSchema>;
 export type UpdateOrcamentoDTO = z.infer<typeof updateOrcamentoSchema>;
 export type ListOrcamentosDTO = z.infer<typeof listOrcamentosSchema>;
+export type CreateUsuarioDTO = z.infer<typeof createUsuarioSchema>;
+export type LoginDTO = z.infer<typeof loginSchema>;

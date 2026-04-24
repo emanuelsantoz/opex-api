@@ -59,3 +59,25 @@ export interface ListOrcamentosQuery {
   page?: number;
   limit?: number;
 }
+
+export interface CreateUsuarioInput {
+  nome: string;
+  email: string;
+  senha: string;
+  idPerfil: number;
+  idArea: number;
+  idSuperior: number | null;
+}
+
+export interface LoginInput {
+  email: string;
+  senha: string;
+}
+
+export interface LoginResponse {
+  id: number;
+  nome: string;
+  email: string;
+  idPerfil: number;
+  idArea: number;
+}

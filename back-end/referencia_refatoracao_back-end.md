@@ -1042,3 +1042,192 @@
       69 -}                                                                                                                                                                                                                                        
       84 +}                                                                                                                                                                                                                                        
       85   No newline at end of file
+### Endpoint Auth/Usuarios - Login e Cadastro
+
+Estruturado endpoint `/api/auth/usuarios` para login (GET) e cadastro (POST):
+
+● Write(api\auth\usuarios\index.ts)
+  ⎿  Created new file
+      1 +import type { NextApiRequest, NextApiResponse } from 'next';
+      2 +import { UsuarioService } from '../../services/index.js';
+      3 +import { successResponse, withErrorHandler } from '../../lib/response.js';
+      4 +import { createUsuarioSchema, loginSchema } from '../../lib/validators.js';
+      5 +import { AuthUser } from '../../types/index.js';
+      6 +
+      7 +const usuarioService = new UsuarioService();
+      8 +
+      9 +async function handler(req: NextApiRequest, res: NextApiResponse) {
+      10 +  if (req.method === 'GET') {
+      11 +    // Login via GET
+      12 +    const validation = loginSchema.safeParse(req.query);
+      13 +    if (!validation.success) {
+      14 +      return res.status(400).json({
+      15 +        success: false,
+      16 +        error: {
+      17 +          code: 'VALIDATION_ERROR',
+      18 +          message: 'Dados invalidos',
+      19 +          details: validation.error.errors.map((e) => ({
+      20 +            path: e.path.join('.'),
+      21 +            message: e.message,
+      22 +          })),
+      23 +        },
+      24 +      });
+      25 +    }
+      26 +
+      27 +    const { email, senha } = validation.data;
+      28 +    const user = await usuarioService.login(email, senha);
+      29 +    return successResponse(user, 200)(req, res);
+      30 +  }
+      31 +
+      32 +  if (req.method === 'POST') {
+      33 +    // Cadastro via POST
+      34 +    const validation = createUsuarioSchema.safeParse(req.body);
+      35 +    if (!validation.success) {
+      36 +      return res.status(400).json({
+      37 +        success: false,
+      38 +        error: {
+      39 +          code: 'VALIDATION_ERROR',
+      40 +          message: 'Dados invalidos',
+      41 +          details: validation.error.errors.map((e) => ({
+      42 +            path: e.path.join('.'),
+      43 +            message: e.message,
+      44 +          })),
+      45 +        },
+      46 +      });
+      47 +    }
+      48 +
+      49 +    const user: AuthUser = {
+      50 +      id: 1,
+      51 +      idArea: 1,
+      52 +      idPerfil: 1,
+      53 +      idSuperior: null,
+      54 +    };
+      55 +
+      56 +    const novoUsuario = await usuarioService.create(validation.data, user);
+      57 +    return successResponse(novoUsuario, 201)(req, res);
+      58 +  }
+      59 +
+      60 +  res.setHeader('Allow', 'GET, POST');
+      61 +  return res.status(405).json({
+      62 +    success: false,
+      63 +    error: {
+      64 +      code: 'METHOD_NOT_ALLOWED',
+      65 +      message: 'Metodo nao permitido',
+      66 +    },
+      67 +  });
+      68 +}
+      69 +
+      70 +export default withErrorHandler(handler);
+
+● Write(services/UsuarioService.ts)
+  ⎿  Updated existing service
+      1 +import { prisma } from '../lib/prisma.js';
+      2 +import { AuthUser, CreateUsuarioInput } from '../types/index.js';
+      3 +import { ConflictError, ForbiddenError, NotFoundError, UnauthorizedError } from '../lib/errors.js';
+      4 +
+      5 +export class UsuarioService {
+      6 +    async create(data: CreateUsuarioInput, user: AuthUser) {
+      7 +        if (user.idPerfil !== 1 && user.idPerfil !== 2) {
+      8 +            throw new ForbiddenError('Usuario nao tem permissao para criar usuarios');
+      9 +        }
+      10 +
+      11 +        const existingUsuario = await prisma.usuario.findUnique({
+      12 +            where: { email: data.email },
+      13 +        });
+      14 +
+      15 +        if (existingUsuario) {
+      16 +            throw new ConflictError('Email ja cadastrado');
+      17 +        }
+      18 +
+      19 +        return await prisma.usuario.create({
+      20 +            data: {
+      21 +                nome: data.nome,
+      22 +                email: data.email,
+      23 +                senha: data.senha,
+      24 +                idPerfil: data.idPerfil,
+      25 +                idArea: data.idArea,
+      26 +                idSuperior: data.idSuperior,
+      27 +            },
+      28 +            include: {
+      29 +                perfil: true,
+      30 +                area: true,
+      31 +            },
+      32 +        });
+      33 +    }
+      34 +
+      35 +    async findByEmail(email: string) {
+      36 +        return await prisma.usuario.findUnique({
+      37 +            where: { email },
+      38 +            include: {
+      39 +                perfil: true,
+      40 +                area: true,
+      41 +            },
+      42 +        });
+      43 +    }
+      44 +
+      45 +    async login(email: string, senha: string) {
+      46 +        const usuario = await prisma.usuario.findUnique({
+      47 +            where: { email },
+      48 +            include: {
+      49 +                perfil: true,
+      50 +                area: true,
+      51 +            },
+      52 +        });
+      53 +
+      54 +        if (!usuario) {
+      55 +            throw new NotFoundError('Usuario');
+      56 +        }
+      57 +
+      58 +        if (usuario.senha !== senha) {
+      59 +            throw new UnauthorizedError('Credenciais invalidas');
+      60 +        }
+      61 +
+      62 +        return {
+      63 +            id: usuario.id,
+      64 +            nome: usuario.nome,
+      65 +            email: usuario.email,
+      66 +            idPerfil: usuario.idPerfil,
+      67 +            idArea: usuario.idArea,
+      68 +        };
+      69 +    }
+      70 +}
+
+● Write(types/index.ts)
+  ⎿  Added new types
+      63 +export interface CreateUsuarioInput {
+      64 +  nome: string;
+      65 +  email: string;
+      66 +  senha: string;
+      67 +  idPerfil: number;
+      68 +  idArea: number;
+      69 +  idSuperior: number | null;
+      70 +}
+      71 +
+      72 +export interface LoginInput {
+      73 +  email: string;
+      74 +  senha: string;
+      75 +}
+      76 +
+      77 +export interface LoginResponse {
+      78 +  id: number;
+      79 +  nome: string;
+      80 +  email: string;
+      81 +  idPerfil: number;
+      82 +  idArea: number;
+      83 +}
+
+● Write(lib/validators.ts)
+  ⎿  Added new schemas
+      48 +export const createUsuarioSchema = z.object({
+      49 +  nome: z.string().min(1, 'Nome e obrigatorio').max(100),
+      50 +  email: z.string().email('Email invalido'),
+      51 +  senha: z.string().min(6, 'Senha deve ter no minimo 6 caracteres'),
+      52 +  idPerfil: z.number().int().positive(),
+      53 +  idArea: z.number().int().positive(),
+      54 +  idSuperior: z.number().int().positive().nullable(),
+      55 +});
+      56 +
+      57 +export const loginSchema = z.object({
+      58 +  email: z.string().email('Email invalido'),
+      59 +  senha: z.string().min(1, 'Senha e obrigatoria'),
+      60 +});

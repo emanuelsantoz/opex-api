@@ -32,6 +32,7 @@ const routes: Record<string, string> = {
   '/api/lancamentos': './api/lancamentos/index',
   '/api/lancamentos/aprovar': './api/lancamentos/aprovar/index',
   '/api/categorias': './api/categorias/index',
+  '/api/auth/usuarios': './api/auth/usuarios/index',
 };
 
 app.use(async (req: NextApiRequest, res: NextApiResponse, next: any) => {
