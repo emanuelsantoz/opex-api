@@ -96,7 +96,13 @@ export class LancamentoService {
         take: limit,
         orderBy: { id: 'desc' },
         include: {
-          orcamento: true,
+          orcamento: {
+            include: { 
+              area: true,
+              coordenador: true,
+              status: true,
+            }
+          },
           produto: true,
           tipo: true,
           status: true,
