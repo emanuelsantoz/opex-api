@@ -101,7 +101,11 @@ export class LancamentoService {
               area: true,
             }
           },
-          produto: true,
+          produto: { 
+            include: {
+              categoria: true,
+            }
+          },
           tipo: true,
           status: true,
         },
