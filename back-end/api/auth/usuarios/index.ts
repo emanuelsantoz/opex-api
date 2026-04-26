@@ -7,9 +7,19 @@ import { AuthUser } from '../../../types/index.js';
 const usuarioService = new UsuarioService();
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
-  // 1. Aplica o CORS (permitindo que o front acesse)
+  // 1. Headers de CORS - Essencial para o Navegador permitir o acesso
   res.setHeader('Access-Control-Allow-Origin', '*');
-  
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS, POST');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, x-user-id, x-user-area, x-user-perfil');
+
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+
+  if (req.method === 'OPTIONS') {
+    // Resposta rápida para o pré-flight do CORS
+    console.log('Resposta a pré-flight OPTIONS');
+    return res.status(200).end();
+  }
+
   if (req.method === 'GET') {
     // Login via GET
     const validation = loginSchema.safeParse(req.query);
