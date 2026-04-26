@@ -170,6 +170,4 @@ export class AprovacaoService {
       orderBy: { id: 'asc' },
     });
   }
-
-
 }

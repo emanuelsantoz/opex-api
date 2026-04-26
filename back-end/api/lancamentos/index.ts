@@ -28,7 +28,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     if (req.method === 'GET') {
-      //const user = getAuthUser(req);
+      const user = getAuthUser(req);
 
       const parseResult = listLancamentosSchema.safeParse(req.query);
       if (!parseResult.success) {
