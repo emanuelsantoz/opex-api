@@ -10,7 +10,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   // 1. Headers de CORS - Essencial para o Navegador permitir o acesso
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS, POST');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, x-user-id, x-user-area, x-user-perfil');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, x-user-id, x-user-area, x-user-perfil, x-user-superior');
 
   console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
 
