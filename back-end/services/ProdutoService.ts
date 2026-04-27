@@ -4,7 +4,11 @@ import { ForbiddenError, NotFoundError } from '../lib/errors.js';
 
 export class ProdutoService {
   async findAll(user: AuthUser, idCategoriaLancamento?: number) {
-    const where: { idCategoriaLancamento?: number; categoria: { idArea: number } } = {
+    const where:
+      {
+        idCategoriaLancamento?: number;
+        categoria: { idArea: number }
+      } = {
       categoria: { idArea: user.idArea },
     };
 

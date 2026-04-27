@@ -8,9 +8,7 @@ const produtoService = new ProdutoService();
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
-    // Configuração de CORS para garantir que o front acesse
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    
+    // Configuração de CORS para garantir que o front acesse    
     if (req.method === 'OPTIONS') {
       res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
       res.setHeader('Access-Control-Allow-Headers', 'x-user-id, x-user-area, x-user-perfil, x-user-superior, content-type');
