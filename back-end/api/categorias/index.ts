@@ -8,28 +8,35 @@ const produtoService = new ProdutoService();
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
-    if (req.method !== 'GET') {
-      res.setHeader('Allow', ['GET']);
-      return res.status(405).json({
-        success: false,
-        error: { code: 'METHOD_NOT_ALLOWED', message: 'Método não permitido' },
-      });
+    // Configuração de CORS para garantir que o front acesse
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    
+    if (req.method === 'OPTIONS') {
+      res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+      res.setHeader('Access-Control-Allow-Headers', 'x-user-id, x-user-area, x-user-perfil, x-user-superior, content-type');
+      return res.status(200).end();
     }
 
+    if (req.method !== 'GET') {
+      return res.status(405).json({ success: false, message: 'Método não permitido' });
+    }
+
+    // Pega o usuário logado (contendo idArea e idPerfil)
     const user = getAuthUser(req);
     const { tipo, idCategoria } = req.query;
 
     if (tipo === 'produtos') {
-      // Para:
       const produtos = await produtoService.findAll(
-        user,
+        user, 
         idCategoria ? Number(idCategoria) : undefined
       );
       return res.status(200).json(successResponse(produtos));
     }
 
+    // AQUI: O Service de categorias agora precisa do objeto 'user'
     const categorias = await categoriaService.findAll(user);
     return res.status(200).json(successResponse(categorias));
+
   } catch (error) {
     const { statusCode, body } = errorResponse(error);
     return res.status(statusCode).json(body);
