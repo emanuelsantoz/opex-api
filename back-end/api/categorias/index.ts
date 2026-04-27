@@ -20,6 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const user = getAuthUser(req);
 
       const parseResult = createCategoriaSchema.safeParse(req.body);
+      console.log('Parse result:', parseResult);
       if (!parseResult.success) {
         return res.status(400).json(errorResponse(parseResult.error));
       }

@@ -89,3 +89,4 @@ export type UpdateOrcamentoDTO = z.infer<typeof updateOrcamentoSchema>;
 export type ListOrcamentosDTO = z.infer<typeof listOrcamentosSchema>;
 export type CreateUsuarioDTO = z.infer<typeof createUsuarioSchema>;
 export type LoginDTO = z.infer<typeof loginSchema>;
+export type CreateCategoriaDTO = z.infer<typeof createCategoriaSchema>;
