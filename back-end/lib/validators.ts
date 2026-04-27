@@ -75,6 +75,10 @@ export const listOrcamentosSchema = z.object({
   limit: z.coerce.number().int().positive().max(100).default(20),
 });
 
+export const createCategoriaSchema = z.object({
+  nome: z.string().min(1, 'Nome é obrigatório').max(100),
+  idArea: z.coerce.number().int().positive().optional(),
+});
 
 export type CreateLancamentoDTO = z.infer<typeof createLancamentoSchema>;
 export type ApproveLancamentoDTO = z.infer<typeof approveLancamentoSchema>;

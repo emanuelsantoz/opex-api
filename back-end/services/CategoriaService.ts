@@ -3,6 +3,23 @@ import { AuthUser } from '../types/index.js';
 import { ForbiddenError, NotFoundError } from '../lib/errors.js';
 
 export class CategoriaService {
+  async create(data: { nome: string; idArea?: number }, user: AuthUser) {
+    // Somente usuários com perfil de administrador (idPerfil = 1) podem criar categorias globais (sem idArea)
+    if (!data.idArea && user.idPerfil !== 1) {
+      throw new ForbiddenError('Apenas administradores podem criar categorias globais');
+    }
+
+    // Se o usuário não for administrador, a categoria deve ser associada à área do usuário
+    const idArea = data.idArea || user.idArea;
+
+    return prisma.categoriaLancamento.create({
+      data: {
+        nome: data.nome,
+        idArea,
+      },
+    });
+  }
+
   async findAll(user: AuthUser, filtros?: any) {
     return prisma.categoriaLancamento.findMany({
       where: {

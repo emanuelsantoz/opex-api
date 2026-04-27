@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { CategoriaService, ProdutoService } from '../../services/index.js';
 import { getAuthUser } from '../../middlewares/auth.js';
 import { successResponse, errorResponse } from '../../lib/response.js';
+import { createCategoriaSchema } from '../../lib/validators.js';
 
 const categoriaService = new CategoriaService();
 const produtoService = new ProdutoService();
@@ -15,26 +16,40 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(200).end();
     }
 
-    if (req.method !== 'GET') {
-      return res.status(405).json({ success: false, message: 'Método não permitido' });
+    if (req.method === 'POST') {
+      const user = getAuthUser(req);
+
+      const parseResult = createCategoriaSchema.safeParse(req.body);
+      if (!parseResult.success) {
+        return res.status(400).json(errorResponse(parseResult.error));
+      }
+
+      const categoria = await categoriaService.create(parseResult.data, user);
+      return res.status(201).json(successResponse(categoria, 201));
     }
 
-    // Pega o usuário logado (contendo idArea e idPerfil)
-    const user = getAuthUser(req);
-    const { tipo, idCategoria } = req.query;
 
-    if (tipo === 'produtos') {
-      const produtos = await produtoService.findAll(
-        user, 
-        idCategoria ? Number(idCategoria) : undefined
-      );
-      return res.status(200).json(successResponse(produtos));
+
+    if (req.method === 'GET') {
+      //  return res.status(405).json({ success: false, message: 'Método não permitido' });
+
+
+      // Pega o usuário logado (contendo idArea e idPerfil)
+      const user = getAuthUser(req);
+      const { tipo, idCategoria } = req.query;
+
+      if (tipo === 'produtos') {
+        const produtos = await produtoService.findAll(
+          user,
+          idCategoria ? Number(idCategoria) : undefined
+        );
+        return res.status(200).json(successResponse(produtos));
+      }
+
+      // AQUI: O Service de categorias agora precisa do objeto 'user'
+      const categorias = await categoriaService.findAll(user);
+      return res.status(200).json(successResponse(categorias));
     }
-
-    // AQUI: O Service de categorias agora precisa do objeto 'user'
-    const categorias = await categoriaService.findAll(user);
-    return res.status(200).json(successResponse(categorias));
-
   } catch (error) {
     const { statusCode, body } = errorResponse(error);
     return res.status(statusCode).json(body);
