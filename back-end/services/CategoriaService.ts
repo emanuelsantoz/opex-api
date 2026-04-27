@@ -3,9 +3,16 @@ import { AuthUser } from '../types/index.js';
 import { ForbiddenError, NotFoundError } from '../lib/errors.js';
 
 export class CategoriaService {
-  async findAll(user: AuthUser) {
+  async findAll(user: AuthUser, filtros?: any) {
     return prisma.categoriaLancamento.findMany({
-      where: { idArea: user.idArea },
+      where: {
+        // Mesclamos os filtros existentes (como busca por nome, se houver) com o OR
+        ...filtros,
+        OR: [
+          { idArea: user.idArea },
+          { idArea: null },
+        ],
+      },
       include: {
         produtos: {
           include: {
@@ -56,8 +63,7 @@ export class ProdutoService {
         // Mesclamos os filtros existentes (como busca por nome, se houver) com o OR
         ...where,
         OR: [
-          { idCategoriaLancamento: user.idArea }, // Traz o que é da área específica do usuário
-          { idArea: null }         // + Traz o que for Global (nulo)
+          { idCategoriaLancamento: user.idArea }, // Traz o que é da área específica do usuário        // + Traz o que for Global (nulo)
         ]
       },
       include: {
