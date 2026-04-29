@@ -90,15 +90,24 @@ export const listProdutosSchema = z.object({
   limit: z.coerce.number().int().positive().max(100).default(20),
 });
 
+export const createCategoriaSchema = z.object({
+  nome: z.string().min(1, 'Nome é obrigatório').max(100),
+  idArea: z.coerce.number().int().positive().optional(),
+});
+
 
 export type CreateLancamentoDTO = z.infer<typeof createLancamentoSchema>;
-export type ApproveLancamentoDTO = z.infer<typeof approveLancamentoSchema>;
 export type CreateCompraDTO = z.infer<typeof createCompraSchema>;
-export type ListLancamentosDTO = z.infer<typeof listLancamentosSchema>;
 export type CreateOrcamentoDTO = z.infer<typeof createOrcamentoSchema>;
-export type UpdateOrcamentoDTO = z.infer<typeof updateOrcamentoSchema>;
-export type ListOrcamentosDTO = z.infer<typeof listOrcamentosSchema>;
-export type CreateUsuarioDTO = z.infer<typeof createUsuarioSchema>;
-export type LoginDTO = z.infer<typeof loginSchema>;
-export type ListProdutosDTO = z.infer<typeof listProdutosSchema>;
 export type CreateProdutoDTO = z.infer<typeof createProdutoSchema>;
+export type CreateCategoriaDTO = z.infer<typeof createCategoriaSchema>;
+export type CreateUsuarioDTO = z.infer<typeof createUsuarioSchema>;
+
+export type ListOrcamentosDTO = z.infer<typeof listOrcamentosSchema>;
+export type ListLancamentosDTO = z.infer<typeof listLancamentosSchema>;
+export type ListProdutosDTO = z.infer<typeof listProdutosSchema>;
+
+export type LoginDTO = z.infer<typeof loginSchema>;
+export type ApproveLancamentoDTO = z.infer<typeof approveLancamentoSchema>;
+export type UpdateOrcamentoDTO = z.infer<typeof updateOrcamentoSchema>;
+

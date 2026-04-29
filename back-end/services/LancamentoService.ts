@@ -66,29 +66,29 @@ export class LancamentoService {
     const { ano, mes, idStatusLancamento, page = 1, limit = 20 } = filters;
     const skip = (page - 1) * limit;
 
-    // AQUI ESTÁ A MUDANÇA: Usamos o tipo Prisma.LancamentoWhereInput
-    const where: Prisma.LancamentoWhereInput = {
-      orcamento: {
-        idArea: user.idArea,
-      },
-    };
+    // 1. Iniciamos o filtro básico (filtros de data e status valem para todos)
+    const where: Prisma.LancamentoWhereInput = {};
 
+    if (mes) where.mesReferencia = mes;
+    if (idStatusLancamento) where.idStatusLancamento = idStatusLancamento;
+
+    // 2. Lógica de Segurança por Perfil (O "Coração" da sua dúvida)
+    // Se for N2 (ou qualquer um abaixo de N3), restringimos à área dele
+    if (Number(user.idPerfil) <= 2) {
+      where.orcamento = {
+        idArea: user.idArea,
+      };
+    }
+
+    // 3. Adição do filtro de Ano (preservando o idArea se ele existir)
     if (ano) {
-      // Forçamos o tipo para o TS não reclamar da junção de objetos
       where.orcamento = {
         ...(where.orcamento as Prisma.OrcamentoWhereInput),
         ano,
       };
     }
 
-    if (mes) {
-      where.mesReferencia = mes;
-    }
-
-    if (idStatusLancamento) {
-      where.idStatusLancamento = idStatusLancamento;
-    }
-
+    // 4. Execução da query
     const [lancamentos, total] = await Promise.all([
       prisma.lancamento.findMany({
         where,
@@ -96,19 +96,18 @@ export class LancamentoService {
         take: limit,
         orderBy: { id: 'desc' },
         include: {
-          orcamento: true,
-          produto: true,
+          orcamento: {
+            include: {
+              area: true,
+            }
+          },
+          produto: { 
+            include: {
+              categoria: true,
+            }
+          },
           tipo: true,
           status: true,
-          historicos: {
-            include: {
-              aprovador: {
-                select: { id: true, nome: true },
-              },
-            },
-            orderBy: { dataAcao: 'desc' },
-            take: 5,
-          },
         },
       }),
       prisma.lancamento.count({ where }),

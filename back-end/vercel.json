@@ -12,7 +12,11 @@
       "source": "/api/(.*)",
       "headers": [
         { "key": "Access-Control-Allow-Credentials", "value": "true" },
+<<<<<<< HEAD
         { "key": "Access-Control-Allow-Origin", "value": "*" },
+=======
+        { "key": "Access-Control-Allow-Origin", "value": "http://localhost:5173" },
+>>>>>>> 3b05cbe0c0e6b2fb63ccf79abedc14ef752fe54e
         { "key": "Access-Control-Allow-Methods", "value": "GET,OPTIONS,PATCH,DELETE,POST,PUT" },
         { "key": "Access-Control-Allow-Headers", "value": "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, x-user-id, x-user-area, x-user-perfil, x-user-superior" }
       ]

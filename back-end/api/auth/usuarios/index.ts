@@ -7,9 +7,17 @@ import { AuthUser } from '../../../types/index.js';
 const usuarioService = new UsuarioService();
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  // Resposta rápida para o pré-flight do CORS
+  if (req.method === 'OPTIONS') {
+    // 1. Headers de CORS - Essencial para o Navegador permitir o acesso
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS, POST');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, x-user-id, x-user-area, x-user-perfil, x-user-superior');
+    return res.status(200).end();
+  }
+
+  // Login via GET
   if (req.method === 'GET') {
-    // Login via GET
     const validation = loginSchema.safeParse(req.query);
     if (!validation.success) {
       return res.status(400).json({
@@ -30,8 +38,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     return res.status(200).json(successResponse(user));
   }
 
+  // Cadastro via POST
   if (req.method === 'POST') {
-    // Cadastro via POST
     const validation = createUsuarioSchema.safeParse(req.body);
     if (!validation.success) {
       return res.status(400).json({
@@ -58,7 +66,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     return res.status(201).json(successResponse(novoUsuario));
   }
 
-  res.setHeader('Allow', 'GET, POST');
+  res.setHeader('Allow', 'GET, POST, OPTIONS');
   return res.status(405).json({
     success: false,
     error: {

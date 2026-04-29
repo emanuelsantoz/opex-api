@@ -101,8 +101,8 @@ model AreaProduto {
 model CategoriaLancamento {
   id            Int     @id @default(autoincrement())
   nome          String
-  idArea        Int
-  area          Area    @relation(fields: [idArea], references: [id])
+  idArea        Int?
+  area          Area?    @relation(fields: [idArea], references: [id])
 
   produtos      Produto[]
 }
