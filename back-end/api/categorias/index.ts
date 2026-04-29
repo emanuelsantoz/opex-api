@@ -16,19 +16,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       res.setHeader('Access-Control-Allow-Headers', 'x-user-id, x-user-area, x-user-perfil, content-type');
       return res.status(200).end();
     }
-    // AQUI: O POST agora pode criar tanto categorias quanto produtos, dependendo do query param 'tipo'
-    if (req.method === 'POST') {
-      const user = getAuthUser(req);
-
-      const parseResult = createCategoriaSchema.safeParse(req.body);
-      console.log('Parse result:', parseResult);
-      if (!parseResult.success) {
-        return res.status(400).json(errorResponse(parseResult.error));
-      }
-
-      const categoria = await categoriaService.create(parseResult.data, user);
-      return res.status(201).json(successResponse(categoria, 201));
-    }
+    
     // AQUI: O GET agora pode retornar tanto categorias quanto produtos, dependendo do query param 'tipo'
     if (req.method === 'GET') {
       // Pega o usuário logado (contendo idArea e idPerfil)
@@ -48,6 +36,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(200).json(successResponse(categorias));
     }
 
+    // AQUI: O POST agora pode criar tanto categorias quanto produtos, dependendo do query param 'tipo'
+    if (req.method === 'POST') {
+      const user = getAuthUser(req);
+
+      const parseResult = createCategoriaSchema.safeParse(req.body);
+      console.log('Parse result:', parseResult);
+      if (!parseResult.success) {
+        return res.status(400).json(errorResponse(parseResult.error));
+      }
+
+      const categoria = await categoriaService.create(parseResult.data, user);
+      return res.status(201).json(successResponse(categoria, 201));
+    }
   } catch (error) {
     const { statusCode, body } = errorResponse(error);
     return res.status(statusCode).json(body);
