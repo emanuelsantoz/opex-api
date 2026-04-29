@@ -81,3 +81,19 @@ export interface LoginResponse {
   idPerfil: number;
   idArea: number;
 }
+
+export interface CreateProdutoInput{
+  nome:string;
+  idTipoProduto: number;
+  idCategoriaLancamento: number;
+  idAreaProduto?: number;
+}
+
+export interface ListProdutosQuery {
+  nome?:string;
+  idTipoProduto?: number;
+  idCategoriaLancamento?: number;
+  idAreaProduto?: number;
+  page?: number;
+  limit?: number;
+}

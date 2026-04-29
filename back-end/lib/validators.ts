@@ -75,6 +75,21 @@ export const listOrcamentosSchema = z.object({
   limit: z.coerce.number().int().positive().max(100).default(20),
 });
 
+export const createProdutoSchema = z.object({
+  nome: z.coerce.string().min(2).max(100),
+  idTipoProduto: z.coerce.number().int().positive(),
+  idCategoriaLancamento: z.coerce.number().int().positive(),
+  idAreaProduto: z.coerce.number().int().positive().optional(),
+});
+
+export const listProdutosSchema = z.object({
+  ano: z.coerce.number().int().min(2001).max(2100).optional(),
+  mes: z.coerce.number().int().min(1).max(12).optional(),
+  idStatusLancamento: z.coerce.number().int().positive().optional(),
+  page: z.coerce.number().int().positive().default(1),
+  limit: z.coerce.number().int().positive().max(100).default(20),
+});
+
 
 export type CreateLancamentoDTO = z.infer<typeof createLancamentoSchema>;
 export type ApproveLancamentoDTO = z.infer<typeof approveLancamentoSchema>;
@@ -85,3 +100,5 @@ export type UpdateOrcamentoDTO = z.infer<typeof updateOrcamentoSchema>;
 export type ListOrcamentosDTO = z.infer<typeof listOrcamentosSchema>;
 export type CreateUsuarioDTO = z.infer<typeof createUsuarioSchema>;
 export type LoginDTO = z.infer<typeof loginSchema>;
+export type ListProdutosDTO = z.infer<typeof listProdutosSchema>;
+export type CreateProdutoDTO = z.infer<typeof createProdutoSchema>;

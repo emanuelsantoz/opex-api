@@ -8,6 +8,13 @@ const produtoService = new ProdutoService();
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
+    if (req.method === 'OPTIONS') {
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+      res.setHeader('Access-Control-Allow-Headers', 'x-user-id, x-user-area, x-user-perfil, content-type');
+      return res.status(200).end(); // Aqui o guarda-costas (navegador) sorri e deixa o GET passar
+    }
+
     if (req.method !== 'GET') {
       res.setHeader('Allow', ['GET']);
       return res.status(405).json({
@@ -27,6 +34,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       );
       return res.status(200).json(successResponse(produtos));
     }
+
+    if (tipo && tipo !== 'status_lancamento') {
+      //const categoriaLancamento 
+    }
+
 
     const categorias = await categoriaService.findAll(user);
     return res.status(200).json(successResponse(categorias));

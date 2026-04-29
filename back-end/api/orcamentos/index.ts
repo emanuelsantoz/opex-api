@@ -8,6 +8,13 @@ const orcamentoService = new OrcamentoService();
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
+    if (req.method === 'OPTIONS') {
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+      res.setHeader('Access-Control-Allow-Headers', 'x-user-id, x-user-area, x-user-perfil, content-type');
+      return res.status(200).end(); // Aqui o guarda-costas (navegador) sorri e deixa o GET passar
+    }
+
     if (req.method === 'POST') {
       const user = getAuthUser(req);
 
@@ -15,7 +22,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (!parseResult.success) {
         return res.status(400).json(errorResponse(parseResult.error));
       }
-      
+
       const orcamento = await orcamentoService.create(parseResult.data, user);
       console.log(orcamento)
       return res.status(201).json(successResponse(orcamento, 201));
