@@ -3,16 +3,33 @@ import { createOrcamentoSchema, listOrcamentosSchema } from '../../lib/validator
 import { OrcamentoService } from '../../services/index.js';
 import { getAuthUser } from '../../middlewares/index.js';
 import { successResponse, errorResponse } from '../../lib/response.js';
+import { CORS_CONFIG } from '../../config/cors.js';
 
 const orcamentoService = new OrcamentoService();
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
+    const origin = req.headers.origin;
+    // Verifica se a origem da requisição está na sua lista de permitidos
+
+    if (origin && CORS_CONFIG.allowedOrigins.includes(origin)) {
+      res.setHeader('Access-Control-Allow-Origin', origin);
+    }
+
+    // Configuração de CORS para garantir que o front acesse    
     if (req.method === 'OPTIONS') {
-      res.setHeader('Access-Control-Allow-Origin', '*');
-      res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-      res.setHeader('Access-Control-Allow-Headers', 'x-user-id, x-user-area, x-user-perfil, content-type');
-      return res.status(200).end(); // Aqui o guarda-costas (navegador) sorri e deixa o GET passar
+      // Somente o seu endereço local ou seu domínio de produção
+      const allowedOrigin = 'http://localhost:5173';
+
+      res.setHeader('Access-Control-Allow-Origin', allowedOrigin);
+      res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+      res.setHeader('Access-Control-Allow-Headers', 'x-user-id, x-user-area, x-user-perfil, x-user-superior, content-type');
+
+      // Isso diz ao navegador que ele pode confiar nessa configuração por 24 horas (86400 seg)
+      // Evita que o navegador faça um OPTIONS antes de CADA requisição, melhorando a performance.
+      res.setHeader('Access-Control-Max-Age', '86400');
+
+      return res.status(204).end();
     }
 
     if (req.method === 'POST') {
