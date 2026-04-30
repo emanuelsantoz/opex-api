@@ -4,6 +4,7 @@ export const CORS_CONFIG = {
   // Em produção, você usaria uma variável de ambiente: process.env.ALLOWED_ORIGIN
   allowedOrigins: [
     'http://localhost:5173',
+    'https://controle-gastos-lake.vercel.app/'
   ],
   allowedHeaders: [
     'x-user-id',
