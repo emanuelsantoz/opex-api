@@ -86,7 +86,7 @@ export interface CreateProdutoInput{
   nome:string;
   idTipoProduto: number;
   idCategoriaLancamento: number;
-  idAreaProduto?: number;
+  idAreaProduto?: number | null;
 }
 
 export interface ListProdutosQuery {

@@ -79,7 +79,7 @@ export const createProdutoSchema = z.object({
   nome: z.coerce.string().min(2).max(100),
   idTipoProduto: z.coerce.number().int().positive(),
   idCategoriaLancamento: z.coerce.number().int().positive(),
-  idAreaProduto: z.coerce.number().int().positive().optional().nullable(),
+  idAreaProduto: z.coerce.number().int().positive().nullish()
 });
 
 export const listProdutosSchema = z.object({
