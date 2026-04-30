@@ -3,20 +3,36 @@ import { CategoriaService, ProdutoService } from '../../services/index.js';
 import { getAuthUser } from '../../middlewares/auth.js';
 import { successResponse, errorResponse } from '../../lib/response.js';
 import { createCategoriaSchema } from '../../lib/validators.js';
+import { CORS_CONFIG } from '../../config/cors.js';
 
 const categoriaService = new CategoriaService();
 const produtoService = new ProdutoService();
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
+    const origin = req.headers.origin;
+    // Verifica se a origem da requisição está na sua lista de permitidos
+    
+    if (origin && CORS_CONFIG.allowedOrigins.includes(origin)) {
+      res.setHeader('Access-Control-Allow-Origin', origin);
+    }
+
     // Configuração de CORS para garantir que o front acesse    
     if (req.method === 'OPTIONS') {
-      res.setHeader('Access-Control-Allow-Origin', '*');
-      res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-      res.setHeader('Access-Control-Allow-Headers', 'x-user-id, x-user-area, x-user-perfil, content-type');
-      return res.status(200).end();
+      // Somente o seu endereço local ou seu domínio de produção
+      const allowedOrigin = 'http://localhost:5173';
+
+      res.setHeader('Access-Control-Allow-Origin', allowedOrigin);
+      res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+      res.setHeader('Access-Control-Allow-Headers', 'x-user-id, x-user-area, x-user-perfil, x-user-superior, content-type');
+
+      // Isso diz ao navegador que ele pode confiar nessa configuração por 24 horas (86400 seg)
+      // Evita que o navegador faça um OPTIONS antes de CADA requisição, melhorando a performance.
+      res.setHeader('Access-Control-Max-Age', '86400');
+
+      return res.status(204).end();
     }
-    
+
     // AQUI: O GET agora pode retornar tanto categorias quanto produtos, dependendo do query param 'tipo'
     if (req.method === 'GET') {
       // Pega o usuário logado (contendo idArea e idPerfil)
