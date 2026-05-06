@@ -32,7 +32,7 @@ vite.config.js
 ```
 export const CORES = {
   primaria: '#00965E', 
-  primaria_escura: '#007A4D', 
+  primaria_escura: '#007A4D', C:\Users\emanu\OneDrive\Desktop\api\opex-api\back-end
   primaria_clara: '#00B872',
   secundaria: '#0066CC', alerta: 
   '#F59E0B', perigo: '#EF4444', 
