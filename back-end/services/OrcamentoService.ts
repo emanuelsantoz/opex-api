@@ -116,6 +116,18 @@ export class OrcamentoService {
             select: { id: true, nome: true, email: true },
           },
           status: true,
+          lancamentos: {
+            include: {
+              produto: {
+                include: {
+                  categoria: true,
+                },
+              },
+              tipo: true,
+              status: true,
+            },
+            orderBy: { mesReferencia: 'asc' },
+          },
           _count: {
             select: { lancamentos: true },
           },
